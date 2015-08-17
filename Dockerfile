@@ -37,4 +37,5 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 COPY php_file_limit.ini /usr/local/etc/php/conf.d/
+WORKDIR /var/www
 CMD ["apache2-foreground"]
