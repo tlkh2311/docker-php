@@ -1,17 +1,18 @@
 FROM php:5.6-apache
 # Install modules
 RUN apt-get update && apt-get install -y \
+        bzip2 \
+        git \
         libc-client2007e-dev \
         libfreetype6-dev \
+        libicu-dev gzip \
         libjpeg62-turbo-dev \
-        libicu-dev \
         libkrb5-dev \
         libmcrypt-dev \
         libpng12-dev \
         libpq-dev \
         libssl-dev \
-        git \
-        bzip2 \
+        wget \
     && docker-php-ext-install \
         iconv \
         intl \
@@ -26,9 +27,11 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
     && a2enmod rewrite \
+    && a2enmod cgi \
+    && a2enmod expires \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && curl -sS http://get.sensiolabs.org/php-cs-fixer.phar -o /usr/local/bin/php-cs-fixer && chmod 755 /usr/local/bin/php-cs-fixer \
-    && curl -sSL https://nodejs.org/dist/latest/node-v0.12.7-linux-x64.tar.gz | tar --strip-components 1 -C /usr/local -xzf - \
+    && curl -sSL https://nodejs.org/dist/v0.12.7/node-v0.12.7-linux-x64.tar.gz | tar --strip-components 1 -C /usr/local -xzf - \
     && curl -sSL https://www.npmjs.com/install.sh | sh \
     && npm install -g \
         jake \
@@ -36,6 +39,28 @@ RUN apt-get update && apt-get install -y \
         gulp \
     && apt-get clean
 
-COPY php_file_limit.ini /usr/local/etc/php/conf.d/
+# grab gosu for easy step-down from root
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
+RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture)" \
+    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture).asc" \
+    && gpg --verify /usr/local/bin/gosu.asc \
+    && rm /usr/local/bin/gosu.asc \
+    && chmod +x /usr/local/bin/gosu
+
+#relic#RUN curl -sSL https://download.newrelic.com/548C16BF.gpg | apt-key add - \
+#relic#     && echo "deb http://apt.newrelic.com/debian/ newrelic non-free" > /etc/apt/sources.list.d/newrelic.list \
+#relic#     && apt-get update \
+#relic#     && apt-get -y install newrelic-php5
+#relic#RUN newrelic-install install
+#relic#
+#relic#COPY apache_local.conf /etc/apache2/conf-enabled/
+#relic#
+#relic#COPY php_file_limit.ini /usr/local/etc/php/conf.d/
+#relic#RUN sed -i 's@.*license.*@@' /usr/local/etc/php/conf.d/newrelic.ini
+#relic#COPY newrelic-key.ini /usr/local/etc/php/conf.d/
+#relic#
+RUN echo "application/x-x509-ca-cert pem" >> /etc/mime.types
+RUN sed -i 's@^exec@umask 002 ; exec@' /usr/local/bin/apache2-foreground
+
 WORKDIR /var/www
 CMD ["apache2-foreground"]
