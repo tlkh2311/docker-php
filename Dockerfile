@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
         libpng12-dev \
         libpq-dev \
         libssl-dev \
+        postgresql-client-9.4 \
         wget \
     && docker-php-ext-install \
         iconv \
