@@ -48,18 +48,7 @@ RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/downloa
     && rm /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu
 
-#relic#RUN curl -sSL https://download.newrelic.com/548C16BF.gpg | apt-key add - \
-#relic#     && echo "deb http://apt.newrelic.com/debian/ newrelic non-free" > /etc/apt/sources.list.d/newrelic.list \
-#relic#     && apt-get update \
-#relic#     && apt-get -y install newrelic-php5
-#relic#RUN newrelic-install install
-#relic#
-#relic#COPY apache_local.conf /etc/apache2/conf-enabled/
-#relic#
-#relic#COPY php_file_limit.ini /usr/local/etc/php/conf.d/
-#relic#RUN sed -i 's@.*license.*@@' /usr/local/etc/php/conf.d/newrelic.ini
-#relic#COPY newrelic-key.ini /usr/local/etc/php/conf.d/
-#relic#
+COPY apache_local.conf /etc/apache2/conf-enabled/
 RUN echo "application/x-x509-ca-cert pem" >> /etc/mime.types
 RUN sed -i 's@^exec@umask 002 ; exec@' /usr/local/bin/apache2-foreground
 
