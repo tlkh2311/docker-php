@@ -49,6 +49,7 @@ RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/downloa
     && chmod +x /usr/local/bin/gosu
 
 COPY j16sdiz-php.ini /usr/local/etc/php/conf.d/
+COPY php_file_limit.ini /usr/local/etc/php/conf.d/
 COPY apache_local.conf /etc/apache2/conf-enabled/
 RUN echo "application/x-x509-ca-cert pem" >> /etc/mime.types
 RUN sed -i 's@^exec@umask 002 ; exec@' /usr/local/bin/apache2-foreground
