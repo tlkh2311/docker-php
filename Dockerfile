@@ -48,6 +48,11 @@ RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/downloa
     && rm /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu
 
+RUN wget -O pagespeed.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb \
+    && dpkg -i pagespeed.deb \
+    && rm pagespeed.deb \
+    && apt-get -f install
+
 COPY j16sdiz-php.ini /usr/local/etc/php/conf.d/
 COPY php_file_limit.ini /usr/local/etc/php/conf.d/
 COPY apache_local.conf /etc/apache2/conf-enabled/
