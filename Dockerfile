@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
         libicu-dev gzip \
         libjpeg62-turbo-dev \
         libkrb5-dev \
+        libxml2-dev \
         libmcrypt-dev \
         libpng12-dev \
         libpq-dev \
@@ -23,6 +24,7 @@ RUN apt-get update && apt-get install -y \
         zip \
     && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
     && docker-php-ext-install imap \
+    && docker-php-ext-install soap \
     && docker-php-ext-install pgsql \
     && docker-php-ext-install pdo_pgsql \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
