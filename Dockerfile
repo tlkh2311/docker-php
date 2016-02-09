@@ -31,6 +31,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install gd \
     && a2enmod rewrite \
     && a2enmod proxy \
+    && a2enmod proxy_http \
     && a2enmod cgi \
     && a2enmod expires \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
