@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
         mcrypt \
         pgsql \
         zip \
+        sockets \
     && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
     && docker-php-ext-install imap \
     && docker-php-ext-install soap \
